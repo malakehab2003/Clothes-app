@@ -1,0 +1,17 @@
+input{
+    width: 400px;
+    margin: 10px auto;
+}
+@media screen and (max-width:992px) {
+    input{
+        display: none;
+    }
+    .search-icon{
+        display: inline-block !important;
+    }
+}
+i{
+    margin: auto 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
