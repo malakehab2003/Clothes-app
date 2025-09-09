@@ -91,15 +91,15 @@ button {
 }
 .hero-img {
   width: 80%;
-  height: 1000px; 
+  height: 1005px; 
   object-fit: cover;
   border-radius: 20px;
   display: block;
   margin: 0 auto;
 }
 .brands-bar {
-  width: 100vw;        
-  height: 200px;
+  width: 105vw;        
+  height: 180px;
   background: #000;
   display: flex;
   justify-content: space-around;
@@ -116,7 +116,7 @@ button {
   filter: brightness(0) invert(1);
   max-height: 80%; 
 }
-.versace-logo { max-height: 170%; }
+.versace-logo { max-height: 190%; }
 .zara-logo    { max-height: 60%; }
 .gucci-logo   { max-height: 100%; }
 .prada-logo   { max-height: 140%; }
@@ -159,7 +159,7 @@ button {
   font-weight: 700;
    font-family: 'Integral CF Regular', sans-serif;
   letter-spacing: 1px;
-   margin-bottom: 60px;
+   margin-bottom: 80px;
 }
 .product-card {
   background: #ffffff;
@@ -173,7 +173,7 @@ button {
 }
 .product-card:hover {
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transform: translateY(-5px);
+  transform: translateY(-20px);
 }
 
 .product-img {
@@ -373,7 +373,7 @@ h2.fw-bold {
   font-size: 48px;
   font-style:Bold;
    margin-bottom: 60px;
-
+ margin: left -20px;;
 }
 .testimonial-card {
   background: #fff;
