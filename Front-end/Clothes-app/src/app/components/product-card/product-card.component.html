@@ -1,0 +1,27 @@
+<div class="card border-0 shadow-sm rounded-4 text-center p-3 product-card">
+  <img [src]="product.image" [alt]="product.name" 
+       class="w-100 mb-3 rounded-3 object-fit-cover" style="height: 200px;" />
+
+  <h3 class="h6 fw-semibold text-dark mb-2">{{ product.name }}</h3>
+
+  <div class="d-flex justify-content-center align-items-center mb-2 fs-6 text-warning rating">
+    @for (star of starsArray; track star) {
+      <span [class.filled]="star <= Math.floor(product.rating)">★</span>
+    }
+    <small class="text-muted ms-1">({{ product.reviews }})</small>
+  </div>
+
+  <div class="fs-6 price">
+    <span class="fw-bold text-dark">${{ product.price }}</span>
+
+    @if (product.oldPrice) {
+      <span class="text-decoration-line-through text-muted ms-2">
+        ${{ product.oldPrice }}
+      </span>
+    }
+
+    @if (product.discount) {
+      <span class="text-danger fw-semibold ms-2">-{{ product.discount }}%</span>
+    }
+  </div>
+</div>

@@ -1,0 +1,44 @@
+/* Prevent sidebar from shrinking */
+.filters {
+  width: 240px;
+  flex-shrink: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* Filter option buttons */
+.filter-btn {
+  background: #f5f5f5;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+.filter-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Color filter circles */
+.color-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  cursor: pointer;
+  display: inline-block;
+}
+.color-btn:hover {
+  border-color: #000;
+}
+
+/* Mobile toggle support */
+@media (max-width: 768px) {
+  .filters {
+    display: none;
+  }
+  .filters.active {
+    display: block;
+    margin-bottom: 20px;
+  }
+}
