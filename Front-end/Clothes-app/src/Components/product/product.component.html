@@ -1,0 +1,243 @@
+<nav class="breadcrumb">
+  <a routerLink="/">Home</a> >
+  <a routerLink="/shop">Shop</a> >
+  <a routerlink="/man"> Men</a> >
+  <span>T-Shirts</span>
+</nav>
+<div class="wrap">
+
+  <div class="product-layout">
+
+    <div class="gallery">
+      <div class="thumbs">
+        <img *ngFor="let img of product.images; let i = index"
+             [src]="img"
+             [class.active]="i === selectedImageIndex"
+             (click)="changeImage(i)"
+             alt="thumb">
+      </div>
+     <div class="main-img">
+        <img [src]="product.images[selectedImageIndex]" alt="main image">
+      </div>
+    </div>
+
+    <div class="product-info">
+      <h2>{{ product.title }}</h2>
+
+      <div class="rating-box">
+        <span class="stars">★★★★☆</span>
+        <span class="score">4.5/5</span>
+      </div>
+
+      <div class="price-box">
+        <span class="price">${{ product.price }}</span>
+        <span class="old-price" *ngIf="product.oldPrice">${{ product.oldPrice }}</span>
+        <span class="discount">-40%</span>
+      </div>
+
+      <p class="desc">{{ product.description }}</p>
+      <hr class="divider">
+     <div>
+       <h4>Select Colors</h4>
+      <div class="colors">
+          <div *ngFor="let color of product.colors"
+               class="color-swatch"
+               [style.background]="color"
+               (click)="selectColor(color)"
+               [style.border-color]="selectedColor === color ? '#000' : '#fff'">
+          </div>
+        </div>
+      </div>
+       
+      <hr class="divider">
+      <div>
+        <h4>Choose Size</h4>
+        <div class="sizes">
+          <button *ngFor="let size of product.sizes"
+                  class="size-btn"
+                  [class.active]="selectedSize === size"
+                  (click)="selectSize(size)">
+            {{ size }}
+          </button>
+        </div>
+      </div>
+      <hr class="divider">
+
+      <div class="qty-add">
+        <div class="qty">
+          <button (click)="decreaseQty()">-</button>
+          <span>{{ quantity }}</span>
+          <button (click)="increaseQty()">+</button>
+        </div>
+        <button class="add-btn" (click)="addToCart()">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab-nav">
+      <button (click)="activeTab='details'" [class.active]="activeTab==='details'">Product Details</button>
+      <button (click)="activeTab='reviews'" [class.active]="activeTab==='reviews'">Rating & Reviews</button>
+      <button (click)="activeTab='faq'" [class.active]="activeTab==='faq'">FAQs</button>
+    </div>
+
+    <div *ngIf="activeTab==='reviews'" class="top-right-buttons">
+      <div class="filter-container" (click)="$event.stopPropagation()">
+        <button class="filter-btn" 
+                [class.active]="filterRating > 0"
+                (click)="toggleFilterDropdown($event)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-3-5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm2 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+          </svg>
+          <span>{{ activeFilterLabel }}</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        
+        <div class="filter-dropdown" *ngIf="showFilterDropdown">
+          <div *ngFor="let filter of ratingFilters" 
+               class="filter-option" 
+               [class.active]="filterRating === filter.value"
+               (click)="setFilterRating(filter.value)">
+            <span class="rating-stars">{{ filter.icon || '★'.repeat(5) }}</span>
+            <span class="filter-label">{{ filter.label }}</span>
+            <span class="checkmark" *ngIf="filterRating === filter.value">✓</span>
+          </div>
+        </div>
+      </div>
+      <button class="latest-btn" (click)="toggleSortOrder()">
+        {{ sortByLatest ? 'Latest' : 'Oldest' }} <span>▼</span>
+      </button>
+      <button class="write-review-btn" (click)="openReviewForm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px;">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+        Write a Review
+      </button>
+    </div>
+
+    <div class="tab-content">
+      <div *ngIf="activeTab==='details'" class="tab-pane">
+        <h3>Product Details</h3>
+        <p>{{ product.description }}</p>
+      </div>
+
+      <div *ngIf="activeTab==='reviews'" class="reviews-tab">
+        <div *ngIf="showReviewForm" class="review-modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3>Write a Review</h3>
+              <button class="close-btn" (click)="closeReviewForm()">&times;</button>
+            </div>
+            <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="review-form">
+              <div class="form-group">
+                <label>Your Rating</label>
+                <div class="star-rating">
+                  <span *ngFor="let star of [1,2,3,4,5]" 
+                        (click)="reviewForm.patchValue({rating: star})"
+                        [class.active]="star <= reviewForm.get('rating')?.value">
+                    ★
+                  </span>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="reviewerName">Your Name</label>
+                <input type="text" id="reviewerName" formControlName="name" placeholder="Enter your name">
+                <div *ngIf="reviewForm.get('name')?.invalid && reviewForm.get('name')?.touched" class="error">
+                  Please enter your name (minimum 2 characters)
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="reviewComment">Your Review</label>
+                <textarea id="reviewComment" formControlName="comment" rows="4" 
+                          placeholder="Share your experience... (minimum 10 characters)"></textarea>
+                <div *ngIf="reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched" class="error">
+                  Please enter at least 10 characters
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" (click)="closeReviewForm()" class="btn btn-cancel">
+                  Cancel
+                </button>
+                <button type="submit" [disabled]="!reviewForm.valid" class="btn btn-submit">
+                  Submit Review
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="reviews-section">
+          <div class="reviews-container">
+            <div *ngIf="visibleReviews.length === 0" class="no-reviews">
+              <p>No reviews found. Be the first to review this product!</p>
+            </div>
+            <div *ngFor="let review of visibleReviews" class="review-card">
+              <div class="review-header">
+                <div class="reviewer-info">
+                  <div class="reviewer-avatar">{{ review.name.charAt(0) }}</div>
+                  <div>
+                    <div class="reviewer-name">{{ review.name }}</div>
+                    <div class="review-date">{{ review.date | date:'mediumDate' }}</div>
+                  </div>
+                </div>
+                <div class="stars" [title]="review.rating + ' out of 5 stars'">
+                  {{ review.stars }}
+                </div>
+              </div>
+              <div class="review-content">
+                <p class="review-text">{{ review.text }}</p>
+              </div>
+            </div>
+            
+            <div class="load-more" *ngIf="visibleReviews.length < filteredReviews.length">
+              <button (click)="loadMoreReviews()" class="load-more-btn">
+                Load More Reviews
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="activeTab==='faq'" class="faq-tab">
+        <h3>Frequently Asked Questions</h3>
+        <div class="faq-item">
+          <h4>What is the return policy?</h4>
+          <p>We offer a 30-day return policy for all unworn and unwashed items with original tags attached.</p>
+        </div>
+        <div class="faq-item">
+          <h4>How long does shipping take?</h4>
+          <p>Standard shipping takes 3-5 business days. Express shipping is available for an additional fee.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Do you ship internationally?</h4>
+          <p>Yes, we ship worldwide. International shipping rates and delivery times vary by destination.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reco mb-5">
+    <h3 class="h">YOU MIGHT ALSO LIKE</h3>
+    <div class="reco-grid">
+      <div *ngFor="let item of recommendations" class="card">
+        <img [src]="item.img" alt="">
+        <div class="card-body">
+          <p class="title">{{ item.title }}</p>
+          <div class="stars2">
+            <ng-container *ngFor="let star of getStars(item.rating)">
+            <span *ngIf="star === 'full'">★</span>
+            <span *ngIf="star === 'half'" class="half">★</span>
+            <span *ngIf="star === 'empty'">☆</span>
+            </ng-container>
+            <span class="rating">{{ item.rating}}/5</span>
+          </div>
+          <p class="price2">${{ item.price }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
