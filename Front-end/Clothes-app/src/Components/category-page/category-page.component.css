@@ -1,4 +1,8 @@
 /* Prevent sidebar from shrinking */
+.category-page {
+  margin-bottom: 30px;
+}
+
 .filters {
   width: 240px;
   flex-shrink: 0;

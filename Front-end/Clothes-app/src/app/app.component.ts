@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { HomeComponent } from './home/home.component'; // المسار الصحيح
-
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from '../Components/footer/footer.component';
 import { NavbarComponent } from '../Components/navbar/navbar.component';

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Product } from '../models/product';
+import { Iproduct } from '../models/iproduct';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -9,17 +9,17 @@ import { CurrencyPipe } from '@angular/common';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent {
-  products: Product[] = [
-    { id: 1, name: 'Gradient Graphic T-shirt', size: 'Large', color: 'White', price: 145, image: 'T-shirt1cart.png', quantity: 1 },
-    { id: 2, name: 'Checkered Shirt', size: 'Medium', color: 'Red', price: 180, image: 'T-shirt2cart.png', quantity: 1 },
-    { id: 3, name: 'Skinny Jeans', size: 'Large', color: 'Blue', price: 240, image: 'skinnycart.png', quantity: 1 }
+  products: Iproduct[] = [
+    { id: 1, name: 'Gradient Graphic T-shirt', size: 'Large', color: 'White', price: 145, image: 'T-shirt1cart.png', quantity: 1, rating: 3, category: "jeans", style: "unknown" },
+    { id: 2, name: 'Checkered Shirt', size: 'Medium', color: 'Red', price: 180, image: 'T-shirt2cart.png', quantity: 1, rating: 3, category: "jeans", style: "unknown" },
+    { id: 3, name: 'Skinny Jeans', size: 'Large', color: 'Blue', price: 240, image: 'skinnycart.png', quantity: 1, rating: 3, category: "jeans", style: "unknown" }
   ];
 
-  increase(product: Product) {
+  increase(product: Iproduct) {
     product.quantity++;
   }
 
-  decrease(product: Product) {
+  decrease(product: Iproduct) {
     if (product.quantity > 1) {
       product.quantity--;
     }

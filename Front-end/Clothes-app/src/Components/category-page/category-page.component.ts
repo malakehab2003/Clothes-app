@@ -1,7 +1,7 @@
-import { Iproduct } from './../../models/iproduct';
+import { Iproduct } from './../models/iproduct';
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { ProductCardComponent } from '../../components/product-card/product-card.component';
+import { ProductCardComponent } from '../product-card/product-card.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -31,6 +31,7 @@ export class CategoryPageComponent {
       size: this.sizes[id % this.sizes.length],
       color: this.colors[id % this.colors.length],
       style: this.styles[id % this.styles.length],
+      quantity: 1,
     };
   });
 
