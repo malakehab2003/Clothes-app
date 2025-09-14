@@ -9,8 +9,9 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'cart', component: CartComponent },
-  { path: 'product', component: ProductComponent },
+  { path: 'product/:id', component: ProductComponent },
   { path: 'category', component: CategoryPageComponent },
+  { path: 'category/:name', component: CategoryPageComponent },
 ];
 
 @NgModule({

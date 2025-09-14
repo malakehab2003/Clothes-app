@@ -98,16 +98,19 @@ button,
   cursor: pointer;
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(0) invert(1);
-  max-height: 80%; 
+  max-height: 80%;
+  font-weight: 500;
+  font-size: larger;
 }
-.versace-logo { max-height: 170%; }
-.zara-logo    { max-height: 60%; }
-.gucci-logo   { max-height: 100%; }
-.prada-logo   { max-height: 140%; }
-.ck-logo      { max-height: 40%; }
 .brand-logo:hover {
   transform: scale(1.15);
-  filter: brightness(1) invert(0);
+  animation: hoverEffect 0.6s forwards;
+}
+
+@keyframes hoverEffect {
+  0% { filter: brightness(0) invert(1); }
+  50% { filter: brightness(1) invert(0); }
+  100% { filter: brightness(0) invert(1); }
 }
 
 

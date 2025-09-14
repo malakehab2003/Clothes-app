@@ -8,7 +8,7 @@
         Browse through our diverse range of meticulously crafted garments,
         designed to bring out your individuality and cater to your sense of style.
       </p>
-      <button class="btn btn-dark btn-lg mt-3">Shop Now</button>
+      <button class="btn btn-dark btn-lg mt-3" routerLink="/category">Shop Now</button>
       <div class="row stats mt-4">
         <div class="col-4">
           <h4>200+</h4>
@@ -31,24 +31,24 @@
 </div>
 
 <div class="brands-bar">
-  <img src="assets/images/versace.png" alt="Versace" class="brand-logo versace-logo">
-  <img src="assets/images/zara (2).png" alt="Zara" class="brand-logo zara-logo">
-  <img src="assets/images/gucci.png" alt="Gucci" class="brand-logo gucci-logo">
-  <img src="assets/images/parada.png" alt="Prada" class="brand-logo prada-logo">
-  <img src="assets/images/ck.png" alt="Calvin Klein" class="brand-logo ck-logo">
+  @for (i of brands | slice:0:5; track i) {
+    <span class="brand-logo">{{i}}</span>
+  }
 </div>
+
+
 <div class="container-fluid arrivals-section">
   <div class="section-block">
     <h2 class="section-title text-center">NEW ARRIVALS</h2>
     <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6 col-6 mb-4" *ngFor="let item of visibleArrivals">
+      <div class="col-lg-3 col-md-6 col-sm-6 col-6 mb-4" *ngFor="let item of visibleArrivals" routerLink='/product/{{item.id}}'>
         <div class="product-card">
-          <img [src]="item.image" alt="{{ item.name }}" class="img-fluid product-img" />
-          <h5 class="product-name">{{ item.name }}</h5>
+          <img [src]="item.images[0]" alt="{{ item.title }}" class="img-fluid product-img" />
+          <h5 class="product-name">{{ item.title }}</h5>
           <div class="stars">
             <span *ngFor="let star of [1,2,3,4,5]">
               <i class="fa" 
-                 [ngClass]="star <= item.rating ? 'fa-star text-warning' : 'fa-star-o text-muted'"></i>
+                 [ngClass]="star <= item.rating ? 'fas fa-star text-warning' : 'far fa-star text-warning'"></i>
             </span>
             <span class="rating-text">{{ item.rating }} / 5</span>
           </div>
@@ -69,14 +69,14 @@
   <div class="section-block">
     <h2 class="section-title text-center">TOP SELLING</h2>
     <div class="row">
-      <div class="col-lg-3 col-md-6 col-sm-6 col-6 mb-4" *ngFor="let item of visibleTopSelling">
+      <div class="col-lg-3 col-md-6 col-sm-6 col-6 mb-4" *ngFor="let item of visibleTopSelling" routerLink='/product/{{item.id}}'>
         <div class="product-card">
-          <img [src]="item.image" alt="{{ item.name }}" class="img-fluid product-img" />
-          <h5 class="product-name">{{ item.name }}</h5>
+          <img [src]="item.images[0]" alt="{{ item.title }}" class="img-fluid product-img" />
+          <h5 class="product-name">{{ item.title }}</h5>
           <div class="stars">
             <span *ngFor="let star of [1,2,3,4,5]">
               <i class="fa" 
-                 [ngClass]="star <= item.rating ? 'fa-star text-warning' : 'fa-star-o text-muted'"></i>
+                 [ngClass]="star <= item.rating ? 'fas fa-star text-warning' : 'far fa-star text-warning'"></i>
             </span>
             <span class="rating-text">{{ item.rating }} / 5</span>
           </div>
@@ -95,7 +95,7 @@
 
 <div class="container-fluid dress-style-section">
   <div class="style-wrapper">
-    <h2 class="section-title text-center">BROWSE BY DRESS STYLE</h2>
+    <h2 class="section-title text-center">BROWSE BY CATEGORY</h2>
     <div class="grid-container">
       <div class="style-card" *ngFor="let style of dressStyles">
         <img [src]="style.image" [alt]="style.name" class="style-img" />

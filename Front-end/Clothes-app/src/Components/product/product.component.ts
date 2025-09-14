@@ -1,7 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Review } from '../models/IReview';
 
 @Component({
   selector: 'app-product',
@@ -11,10 +13,14 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
   styleUrls: ['./product.component.css']
 })
 export class ProductComponent implements OnInit {
+  ID: number = 0;
+  product: any;
+  recommendations: any[] = [];
   reviewForm: FormGroup;
   showReviewForm = false;
   filterRating = 0;
   showFilterDropdown = false;
+  reviews: Review[] = [];
   ratingFilters = [
     { value: 0, label: 'All Ratings' },
     { value: 5, label: '5 Stars Only', icon: '★★★★★' },
@@ -35,7 +41,7 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private activedrouter : ActivatedRoute, private http: HttpClient) {
     this.reviewForm = this.fb.group({
       rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -43,51 +49,74 @@ export class ProductComponent implements OnInit {
     });
   }
 
-  product = {
-    title: 'ONE LIFE GRAPHIC T-SHIRT',
-    price: 260,
-    oldPrice: 300,
-    description: 'This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style. ',
-    images: [
-      '2 (2).png',
-      '3 (2).png',
-      '4.png'
-    ],
-    colors: [   '#2d2d2d',  '#334455',  '#556b2f' ],
-    sizes: ['Small', 'Medium', 'Large', 'X-Large'],
-    reviews: [
-      { user: 'Samarth', rating: 5, text: 'Excellent t-shirt, fabric quality is top notch.' },
-      { user: 'Alex M', rating: 4, text: 'Good value for money. Size fits perfectly.' },
-      { user: 'Olivia R', rating: 5, text: 'Absolutely love it. Worth the price.' },
-    ]
-  };
 
 
-  reviews = [
-    { stars: '★★★★★', rating: 5, text: 'Great quality and fit. Love the color and print.', date: '2025-08-10', name: 'John D.' },
-    { stars: '★★★★☆', rating: 4, text: 'Comfortable but runs slightly small.', date: '2025-08-05', name: 'Sarah M.' },
-    { stars: '★★★★★', rating: 5, text: 'Exactly as pictured — highly recommended.', date: '2025-07-28', name: 'Mike T.' },
-    { stars: '★★★★☆', rating: 4, text: 'Good value for the price.', date: '2025-07-20', name: 'Emma L.' },
-    { stars: '★★★★★', rating: 5, text: 'Fast delivery and top-notch fabric.', date: '2025-07-15', name: 'Alex K.' },
-    { stars: '★★★☆☆', rating: 3, text: 'Okay quality, expected better.', date: '2025-07-12', name: 'Chris P.' }
-  ];
-
-  visibleReviews: any[] = [];
+visibleReviews: Review[] = [];
   reviewsToShow = 4;
-  filteredReviews: any[] = [];
+  filteredReviews: Review[] = [];
 
   ngOnInit() {
+    // get id from params
+    this.ID = Number(this.activedrouter.snapshot.paramMap.get('id'));
+
+    // get product from api
+    if (this.ID) {
+      const url = `https://dummyjson.com/products/${this.ID}`
+      this.http.get(url).subscribe({
+        next: (data) => {
+          this.product = data;
+          this.product.colors = ["Red", "Orange", "Green", "Blue", "Yellow"];
+          this.product.sizes = ["XS", "S", "M", "L", "XL"];
+
+          this.reviews = this.product.reviews || [];
+          this.applyFilters();
+
+          this.getRelatedProducts(this.product.category, this.product.id);
+        },
+
+        error: (err) => {
+          console.error('Error fetching product', err);
+        }
+      })
+    }
+
+
     this.applyFilters();
   }
 
+
+  getRelatedProducts(category: string, excludeId: number) {
+    const url = `https://dummyjson.com/products/category/${category}`;
+    this.http.get(url).subscribe({
+      next: (data: any) => {
+        // exclude current product
+        this.recommendations = data.products.filter((p: any) => p.id !== excludeId).slice(0, 6);
+      },
+      error: (err) => {
+        console.error('Error fetching related products', err)
+      }
+    });
+  }
+
+
+  get dimensionsArray() {
+  return this.product?.dimensions 
+    ? Object.entries(this.product.dimensions).map(([key, value]) => ({ key, value })) 
+    : [];
+}
+
   applyFilters() {
-    this.filteredReviews = this.reviews.filter(review => {
+    if (!this.reviews) {
+      this.filteredReviews = [];
+      return;
+    }
+
+    this.filteredReviews = this.reviews.filter((review: any) => {
       if (this.filterRating === 0) return true; 
       return review.rating >= this.filterRating;
     });
-    
-    this.sortReviews();
 
+    this.sortReviews();
     this.visibleReviews = this.filteredReviews.slice(0, this.reviewsToShow);
   }
 
@@ -138,25 +167,18 @@ export class ProductComponent implements OnInit {
   submitReview() {
     if (this.reviewForm.valid) {
       const newReview = {
-        stars: '★'.repeat(this.reviewForm.value.rating) + '☆'.repeat(5 - this.reviewForm.value.rating),
         rating: this.reviewForm.value.rating,
-        text: this.reviewForm.value.comment,
-        date: new Date().toISOString().split('T')[0],
-        name: this.reviewForm.value.name
+        comment: this.reviewForm.value.comment,
+        date: new Date().toISOString(),
+        reviewerName: this.reviewForm.value.reviewerName,
+        reviewerEmail: this.reviewForm.value.reviewerEmail,
       };
-      
+
       this.reviews.unshift(newReview);
       this.applyFilters();
       this.closeReviewForm();
     }
   }
-
-  recommendations = [
-    { img: 'polo.png', title: 'Polo with Contrast Trims', rating: 4.0,  price: 212 },
-    { img: 'Gradient Graphic T-shirt.png', title: 'Gradient Graphic T-shirt', rating: 3.5, price: 145 },
-    { img: 'Polo with Tipping Details.png', title: 'Polo with Taping Details', rating: 4.5, price: 180 },
-    { img: 'Black Striped T-shirt.png', title: 'Black Striped T-shirt', rating: 5.0, price: 120 }
-  ];
 
   selectedImageIndex = 0;
   selectedColor: string | null = null;
@@ -189,6 +211,12 @@ export class ProductComponent implements OnInit {
       alert('Please select a size!');
       return;
     }
+    
+    if (!this.selectedColor) {
+      alert('Please select a Color!');
+      return;
+    }
+
     alert(`Added ${this.quantity} x ${this.product.title} (Size: ${this.selectedSize}, Color: ${this.selectedColor}) to cart`);
   }
     getStars(rating: number): string[] {

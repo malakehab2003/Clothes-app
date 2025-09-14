@@ -1,46 +1,46 @@
-<nav class="breadcrumb">
-  <a routerLink="/">Home</a> >
-  <a routerLink="/shop">Shop</a> >
-  <a routerlink="/man"> Men</a> >
-  <span>T-Shirts</span>
-</nav>
 <div class="wrap">
 
   <div class="product-layout">
 
     <div class="gallery">
-      <div class="thumbs">
-        <img *ngFor="let img of product.images; let i = index"
-             [src]="img"
-             [class.active]="i === selectedImageIndex"
-             (click)="changeImage(i)"
-             alt="thumb">
+      <div class="thumbs"  *ngIf="product?.images.length > 1">
+        <img *ngFor="let img of product?.images; let i = index"
+              [src]="img"
+              [class.active]="i === selectedImageIndex"
+              (click)="changeImage(i)"
+              alt="thumb">
       </div>
+
      <div class="main-img">
-        <img [src]="product.images[selectedImageIndex]" alt="main image">
+        <img [src]="product?.images[selectedImageIndex]" alt="main image">
       </div>
     </div>
 
     <div class="product-info">
-      <h2>{{ product.title }}</h2>
+      <h2>{{ product?.title }}</h2>
 
       <div class="rating-box">
-        <span class="stars">★★★★☆</span>
-        <span class="score">4.5/5</span>
+        <span *ngFor="let star of [1,2,3,4,5]">
+          <i class="fa" 
+              [ngClass]="star <= product?.rating ? 'fas fa-star text-warning' : 'far fa-star text-warning'"></i>
+        </span>
+        <span class="score">{{ product?.rating }}</span>
       </div>
+
+      <p class="price">Stock: {{ product?.stock }}</p>
 
       <div class="price-box">
-        <span class="price">${{ product.price }}</span>
-        <span class="old-price" *ngIf="product.oldPrice">${{ product.oldPrice }}</span>
-        <span class="discount">-40%</span>
+        <span class="price">${{ (product?.price * (100 - product?.discountPercentage) / 100) | number:'1.2-2' }}</span>
+        <span class="old-price" *ngIf="product?.price">${{ product?.price }}</span>
+        <span class="discount">-{{ product?.discountPercentage }}%</span>
       </div>
 
-      <p class="desc">{{ product.description }}</p>
+      <p class="desc">{{ product?.description }}</p>
       <hr class="divider">
      <div>
        <h4>Select Colors</h4>
       <div class="colors">
-          <div *ngFor="let color of product.colors"
+          <div *ngFor="let color of product?.colors"
                class="color-swatch"
                [style.background]="color"
                (click)="selectColor(color)"
@@ -53,7 +53,7 @@
       <div>
         <h4>Choose Size</h4>
         <div class="sizes">
-          <button *ngFor="let size of product.sizes"
+          <button *ngFor="let size of product?.sizes"
                   class="size-btn"
                   [class.active]="selectedSize === size"
                   (click)="selectSize(size)">
@@ -116,10 +116,17 @@
       </button>
     </div>
 
-    <div class="tab-content">
-      <div *ngIf="activeTab==='details'" class="tab-pane">
+    <div>
+      <div *ngIf="activeTab==='details'" class="tab-content">
         <h3>Product Details</h3>
-        <p>{{ product.description }}</p>
+        <p>{{product?.description}}</p>
+        <p>Weight: {{product?.weight}}</p>
+        <div *ngFor="let dim of dimensionsArray">
+          <p>{{ dim.key | titlecase }}: {{ dim.value }}</p>
+        </div>
+        <p>{{product?.warrantyInformation}}</p>
+        <p>{{product?.shippingInformation}}</p>
+        <p>{{product?.returnPolicy}}</p>
       </div>
 
       <div *ngIf="activeTab==='reviews'" class="reviews-tab">
@@ -178,18 +185,22 @@
             <div *ngFor="let review of visibleReviews" class="review-card">
               <div class="review-header">
                 <div class="reviewer-info">
-                  <div class="reviewer-avatar">{{ review.name.charAt(0) }}</div>
+                  <div class="reviewer-avatar">{{ review.reviewerName.charAt(0) }}</div>
                   <div>
-                    <div class="reviewer-name">{{ review.name }}</div>
+                    <div class="reviewer-name">{{ review.reviewerName }}</div>
                     <div class="review-date">{{ review.date | date:'mediumDate' }}</div>
                   </div>
                 </div>
+                
                 <div class="stars" [title]="review.rating + ' out of 5 stars'">
-                  {{ review.stars }}
+                  <span *ngFor="let star of [1,2,3,4,5]">
+                    <i class="fa" [ngClass]="star <= review.rating ? 'fas fa-star text-warning' : 'far fa-star text-warning'"></i>
+                  </span>
                 </div>
               </div>
+
               <div class="review-content">
-                <p class="review-text">{{ review.text }}</p>
+                <p class="review-text">{{ review.comment }}</p>
               </div>
             </div>
             
@@ -224,7 +235,7 @@
     <h3 class="h">YOU MIGHT ALSO LIKE</h3>
     <div class="reco-grid">
       <div *ngFor="let item of recommendations" class="card">
-        <img [src]="item.img" alt="">
+        <img [src]="item.images[0]" alt="">
         <div class="card-body">
           <p class="title">{{ item.title }}</p>
           <div class="stars2">

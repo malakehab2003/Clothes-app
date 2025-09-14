@@ -1,37 +1,64 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  newArrivals = [
-    { name: 'T-shirt with Tape Details', price: 120, image: 'assets/images/2.png', rating: 4.5 },
-    { name: 'Gingko Fit Jeans', price: 240, image: 'assets/images/3.png', rating: 3 },
-    { name: 'Checkered Shirt', price: 180, image: 'assets/images/4.png', rating: 5 },
-    { name: 'Sleeve Striped T-shirt', price: 130, image: 'assets/images/5.png', rating: 4 },
-    { name: 'Gradient Graphic T-shirt', price: 300, image: 'assets/images/17.png', rating: 4.2 },
-    { name: 'One Life Graphic T-shirt', price: 210, image: 'assets/images/18.png', rating: 3.8 }
-  ];
+export class HomeComponent implements OnInit {
+  private apiUrl = 'https://dummyjson.com/products';
+  products: any[] = [];
+  categories: any[] = [];
+  brands: any[] = [];
+  newArrivals: any[] = [];
+  topSelling: any[] = [];
+  constructor(private http: HttpClient) {}
 
-  topSelling = [
-    { name: 'Vertical Striped Shirt', price: 212, image: 'assets/images/6.png', rating: 3.5 },
-    { name: 'Orange Graphic T-shirt', price: 145, image: 'assets/images/7.png', rating: 4 },
-    { name: 'Loose Fit Bermuda Shorts', price: 80, image: 'assets/images/8.png', rating: 5 },
-    { name: 'Faded Skinny Jeans', price: 210, image: 'assets/images/9.png', rating: 4.5 },
-    { name: 'Black Striped T-shirt', price: 500, image: 'assets/images/15.png', rating: 5 },
-    { name: 'Polo with Tipping Details', price: 350, image: 'assets/images/16.png', rating: 4.7 }
-  ];
+  ngOnInit(): void{
+    this.http.get(this.apiUrl).subscribe({
+      next: (data: any) => {
+        // get products
+        this.products = data.products;
+
+        // get new arrivals
+        this.newArrivals = [...this.products].sort(
+          (a, b) => new Date(b.meta.createdAt).getTime() - new Date(a.meta.createdAt).getTime()
+        ).slice(0, 10);
+
+        // get top selling with highest rating
+        this.topSelling = [...this.products].sort(
+          (a, b) => b.rating - a.rating
+        ).slice(0, 10);
+
+        // get categories and brands unique and save it in localstorage
+        this.categories = Array.from(new Set(this.products.map(p => p.category)));
+        this.brands = Array.from(new Set(this.products.map(p => p.brand)));
+
+        if (typeof window !== 'undefined' && localStorage) {
+          localStorage.setItem("categories", JSON.stringify(this.categories));
+        }
+        if (typeof window !== 'undefined' && localStorage) {
+          localStorage.setItem("brands", JSON.stringify(this.brands));
+        }
+
+      },
+      error: (err) => {
+        console.error('Error: ', err)
+      }
+
+    })
+  }
 
   dressStyles = [
-    { name: 'Casual', image: 'assets/images/10.png' },
-    { name: 'Formal', image: 'assets/images/11.png' },
-    { name: 'Party', image: 'assets/images/12.png' },
-    { name: 'Gym', image: 'assets/images/13.png' }
+    { name: 'Beauty', image: 'assets/images/10.png' },
+    { name: 'Fragrances', image: 'assets/images/11.png' },
+    { name: 'Furniture', image: 'assets/images/12.png' },
+    { name: 'Groceries', image: 'assets/images/13.png' }
   ];
 
   showAllArrivals = false;
