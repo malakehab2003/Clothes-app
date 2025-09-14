@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 body {
     overflow: auto;
-    /* padding-bottom: 300px; */
+}
+
+html {
+  scroll-behavior: smooth;
 }

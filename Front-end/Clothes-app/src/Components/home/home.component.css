@@ -82,19 +82,22 @@ button,
 }
 
 .brands-bar {
-  width: 100vw;        
+  width: 98.5vw;      
   height: 100px;
   background: #000;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-top: -100px;     
+  gap: 40px;
+  margin-top: -100px;  
   z-index: 5;
-  position: relative;   
+  position: relative;
+  overflow-x: auto;
+  padding: 0px 20px;
 }
 
 .brand-logo {
-  object-fit: contain;
+  flex: 0 0 auto;
   cursor: pointer;
   transition: transform 0.3s ease, filter 0.3s ease;
   filter: brightness(0) invert(1);

@@ -65,8 +65,14 @@ export class ProductComponent implements OnInit {
       this.http.get(url).subscribe({
         next: (data) => {
           this.product = data;
-          this.product.colors = ["Red", "Orange", "Green", "Blue", "Yellow"];
-          this.product.sizes = ["XS", "S", "M", "L", "XL"];
+          
+          // Assign colors for the current product
+          const savedColors = JSON.parse(localStorage.getItem('colors') || '{}');
+          this.product.colors = savedColors[this.product.id] || [];
+
+          // Assign colors for the current product
+          const savedSizes = JSON.parse(localStorage.getItem('sizes') || '{}');
+          this.product.sizes = savedSizes[this.product.id] || [];
 
           this.reviews = this.product.reviews || [];
           this.applyFilters();

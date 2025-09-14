@@ -1,11 +1,25 @@
 import { Component } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css'],
+  standalone: true,
+  imports: [RouterModule],
 })
 export class NavbarComponent {
+  constructor(private router: Router) {}
 
+  navigateToSection(page: string, section: string) {
+    if (this.router.url.startsWith('/' + page)) {
+      document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      this.router.navigate([page], { fragment: section }).then(() => {
+        setTimeout(() => {
+          document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+      });
+    }
+  }
 }
