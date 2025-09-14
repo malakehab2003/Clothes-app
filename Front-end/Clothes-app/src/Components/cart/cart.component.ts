@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Iproduct } from '../models/iproduct';
 import { CurrencyPipe } from '@angular/common';
 
@@ -8,28 +8,34 @@ import { CurrencyPipe } from '@angular/common';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent {
-  products: Iproduct[] = [
-    { id: 1, name: 'Gradient Graphic T-shirt', size: 'Large', color: 'White', price: 145, image: 'T-shirt1cart.png', quantity: 1, rating: 3, category: "jeans", style: "unknown" },
-    { id: 2, name: 'Checkered Shirt', size: 'Medium', color: 'Red', price: 180, image: 'T-shirt2cart.png', quantity: 1, rating: 3, category: "jeans", style: "unknown" },
-    { id: 3, name: 'Skinny Jeans', size: 'Large', color: 'Blue', price: 240, image: 'skinnycart.png', quantity: 1, rating: 3, category: "jeans", style: "unknown" }
-  ];
-
-  increase(product: Iproduct) {
-    product.quantity++;
-  }
-
-  decrease(product: Iproduct) {
-    if (product.quantity > 1) {
-      product.quantity--;
+export class CartComponent implements OnInit {
+  products: any[] = [];
+  ngOnInit(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.products = JSON.parse(localStorage.getItem('cart') || '[]');
+    } else {
+      this.products = [];
     }
   }
 
+  increase(product: any) {
+    product.quantity++;
+    localStorage.setItem('cart', JSON.stringify(this.products));
+  }
+  
+  decrease(product: Iproduct) {
+    if (product.quantity > 1) {
+      product.quantity--;
+      localStorage.setItem('cart', JSON.stringify(this.products));
+    }
+  }
+  
   remove(productId: number) {
-    this.products = this.products.filter(p => p.id !== productId);
+    this.products = this.products.filter((p: any) => p.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(this.products));
   }
   get subtotal(): number {
-  return this.products.reduce((acc, p) => acc + p.price * p.quantity, 0);
+  return this.products.reduce((acc: any, p: any) => acc + p.price * p.quantity, 0);
   }
   get discount(): number {
   return this.subtotal * 0.2;

@@ -217,33 +217,35 @@ export class ProductComponent implements OnInit {
       return;
     }
 
-    alert(`Added ${this.quantity} x ${this.product.title} (Size: ${this.selectedSize}, Color: ${this.selectedColor}) to cart`);
-
+    
     // get the added product to cards
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-
+    
     // if exists just increate the quantity
-     const existingIndex = cart.findIndex((p: any) => 
-        p.id === this.product.id && p.color === this.selectedColor && p.size === this.selectedSize
-      );
-
-      const productToSave = {
-        ...this.product,
-        colors: this.selectedColor,
-        sizes: this.selectedSize,
-        quantity: this.quantity
-      };
-
-      if (existingIndex !== -1) {
-        // If exists, just increase quantity
-        cart[existingIndex].quantity += this.product.quantity;
-      } else {
-        // Else, add new item
-        cart.push(productToSave);
-      }
-
-      // save to localStorage
-      localStorage.setItem('cart', JSON.stringify(cart));
+    const existingIndex = cart.findIndex((p: any) => 
+      p.id === this.product.id && p.color === this.selectedColor && p.size === this.selectedSize
+  );
+  
+  const productToSave = {
+    title: this.product.title,
+    image: this.product.images[0],
+    price: this.product.price,
+    colors: this.selectedColor,
+    sizes: this.selectedSize,
+    quantity: this.quantity
+  };
+  
+  if (existingIndex !== -1) {
+    // If exists, just increase quantity
+    cart[existingIndex].quantity += this.product.quantity;
+  } else {
+    // Else, add new item
+    cart.push(productToSave);
+  }
+  
+  // save to localStorage
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert(`Added ${this.quantity} x ${this.product.title} (Size: ${this.selectedSize}, Color: ${this.selectedColor}) to cart`);
   }
     getStars(rating: number): string[] {
       const fullStars = Math.floor(rating);      

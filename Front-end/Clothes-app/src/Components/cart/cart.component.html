@@ -7,19 +7,19 @@
         @for (item of products; track item.id) {
             <div class="box d-flex m-3 justify-content-between">
                 <div class="main d-flex">
-                    <img [src]="item.image" alt="" class="col-4">
+                    <img [src]="item?.image" alt="" class="col-4">
                     <div class="details d-flex flex-column">
-                        <h4>{{item.name}} </h4>
-                        <span><b style="color: blue;">Size:</b>{{item.size}} </span>
-                        <span><b style="color: blue;">Color:</b>{{item.color}}</span>
-                        <p class="fs-3 fw-bold mt-2">{{item.price| currency:'USD':'symbol' }} </p>
+                        <h4>{{item?.title}} </h4>
+                        <span><b style="color: blue;">Size:</b>{{item?.sizes}} </span>
+                        <span><b style="color: blue;">Color:</b>{{item?.colors}}</span>
+                        <p class="fs-3 fw-bold mt-2">{{item?.price| currency:'USD':'symbol' }} </p>
                     </div>
                 </div>
                 <div class="counter d-flex flex-column justify-content-between ">
-                    <button class="border border-0" (click)="remove(item.id)"><i class="fa-solid fa-trash" style="color: #ff0000;"></i></button>
+                    <button class="border border-0" (click)="remove(item?.id)"><i class="fa-solid fa-trash" style="color: #ff0000;"></i></button>
                     <div class="count rounded-4 bg-secondary d-flex justify-content-evenly fw-bold">
                         <a class="border border-0" (click)="decrease(item)">-</a>
-                        <span class="number ">{{item.quantity}} </span>
+                        <span class="number ">{{item?.quantity}} </span>
                         <a class="border border-0" (click)="increase(item)">+</a>
                     </div>
                 </div>
