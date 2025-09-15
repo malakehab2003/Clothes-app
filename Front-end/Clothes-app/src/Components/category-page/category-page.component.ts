@@ -1,8 +1,11 @@
-import { Iproduct } from './../models/iproduct';
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { FormsModule } from '@angular/forms';
+import { GetDataService } from '../../Services/get-data.service';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-category-page',
@@ -15,11 +18,36 @@ export class CategoryPageComponent implements OnInit {
   sizes = ['XS', 'S', 'M', 'L', 'XL'];
   colors = ['Red', 'Orange', 'Green', 'Blue', 'Black', 'Grey', 'Yellow'];
   brands: string[] = [];
+  category: string | null = '';
+  brand: string | null = '';
+  search: string | null = '';
 
   products: any[] = [];
 
   currentPage = 1;
   pageSize = 9;
+  constructor(private data: GetDataService,  public activedrouter : ActivatedRoute, private router: Router) {}
+
+  ngOnInit() {
+    this.activedrouter.paramMap.subscribe(params => {
+      this.category = params.get('category') || null;
+      this.brand = params.get('brand') || null;
+      this.search = params.get('search') || null;
+
+      if (this.category) {
+        this.selectedCategory = this.category;
+      } else if (this.brand) {
+        this.selectedbrand = this.brand;
+      }
+    });
+    this.data.getData()
+    this.categories = this.data.categories;
+    this.brands = this.data.brands
+    this.products = this.data.products;
+    if (typeof window !== 'undefined') {
+      this.checkMobile();
+    }
+  }
 
   get paginatedProducts() {
     const start = (this.currentPage - 1) * this.pageSize;
@@ -47,9 +75,13 @@ export class CategoryPageComponent implements OnInit {
   get filteredProducts() {
     return this.products.filter(p =>
       (!this.selectedCategory || p.category === this.selectedCategory) &&
-      (!this.selectedSize || p.size === this.selectedSize) &&
-      (!this.selectedColor || p.color === this.selectedColor) &&
+      (!this.selectedSize || p.sizes.includes(this.selectedSize)) &&
+      (!this.selectedColor || p.colors.includes(this.selectedColor)) &&
       (!this.selectedbrand || p.brand === this.selectedbrand) &&
+      (!this.search || 
+        p.title.toLowerCase().includes(this.search.toLowerCase()) ||
+        p.description.toLowerCase().includes(this.search.toLowerCase())
+      )&&
       p.price <= this.maxPrice
     );
   }
@@ -75,6 +107,9 @@ export class CategoryPageComponent implements OnInit {
   }
 
   resetFilters() {
+    if (this.search) {
+      this.router.navigate(['/category']);
+    }
     this.selectedCategory = null;
     this.selectedSize = null;
     this.selectedColor = null;
@@ -91,19 +126,6 @@ export class CategoryPageComponent implements OnInit {
   // 🔹 Mobile filter support
   isMobile = false;
   showMobileFilters = false;
-
-  ngOnInit() {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      // get categories from local storage
-      const cats: any = JSON.parse(localStorage.getItem("categories") || "[]");
-      this.categories = cats || [];
-
-      // get brands from local storage
-      const bs: any = JSON.parse(localStorage.getItem("brands") || "[]");
-      this.brands = bs || [];
-    }
-    this.checkMobile();
-  }
 
   @HostListener('window:resize', [])
   onResize() {

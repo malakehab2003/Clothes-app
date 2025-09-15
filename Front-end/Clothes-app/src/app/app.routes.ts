@@ -11,8 +11,9 @@ export const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'product/:id', component: ProductComponent },
   { path: 'category', component: CategoryPageComponent },
-  { path: 'category/:category', component: CategoryPageComponent },
-  { path: 'category/:brand', component: CategoryPageComponent },
+  { path: 'category/category/:category', component: CategoryPageComponent },
+  { path: 'category/brand/:brand', component: CategoryPageComponent },
+  { path: 'category/search/:search', component: CategoryPageComponent },
 ];
 
 @NgModule({

@@ -11,6 +11,12 @@ import { Router, RouterModule } from '@angular/router';
 export class NavbarComponent {
   constructor(private router: Router) {}
 
+  onSearch(value: string) {
+    if (value.trim()) {
+      this.router.navigate(['/category/search', value]);
+    }
+  }
+
   navigateToSection(page: string, section: string) {
     if (this.router.url.startsWith('/' + page)) {
       document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });

@@ -16,7 +16,7 @@
     <h3 class="h5 fw-bold mb-3">Filters</h3>
 
     <!-- Category -->
-    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2"
+    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2 option"
         (click)="toggleFilter('category')">Category ▼</h4>
     @if (openFilter === 'category') {
       <ul class="list-unstyled mb-3">
@@ -32,7 +32,7 @@
     }
 
     <!-- Size -->
-    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2"
+    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2 option"
         (click)="toggleFilter('size')">Size ▼</h4>
     @if (openFilter === 'size') {
       <ul class="list-unstyled mb-3">
@@ -48,7 +48,7 @@
     }
 
     <!-- Color -->
-    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2"
+    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2 option"
         (click)="toggleFilter('color')">Color ▼</h4>
     @if (openFilter === 'color') {
       <ul class="list-unstyled d-flex flex-wrap gap-2 mb-3 color-list">
@@ -61,7 +61,7 @@
     }
 
     <!-- brand -->
-    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2"
+    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2 option"
         (click)="toggleFilter('brand')">Brand ▼</h4>
     @if (openFilter === 'brand') {
       <ul class="list-unstyled mb-3">
@@ -77,7 +77,7 @@
     }
 
     <!-- Price -->
-    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2"
+    <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2 option"
         (click)="toggleFilter('price')">Price ▼</h4>
     @if (openFilter === 'price') {
       <div class="mb-3">

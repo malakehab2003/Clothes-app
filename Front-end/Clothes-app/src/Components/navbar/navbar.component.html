@@ -24,9 +24,9 @@
             </li>
         </ul>
     </div>
-    <form class="d-flex position-relative">
+    <form class="d-flex position-relative" (submit)="onSearch(search.value); $event.preventDefault()">
         <i class="fa-solid fa-magnifying-glass d-none search-icon"></i>
-        <input class="form-control me-2 rounded rounded-5 p-3 " type="search" placeholder="Search for products..." aria-label="Search">
+        <input class="form-control me-2 rounded rounded-5 p-3 " type="search" placeholder="Search for products..." aria-label="Search" #search>
         <i  class="fa-solid fa-cart-shopping" routerLink="/cart"></i>
     </form>
     </div>

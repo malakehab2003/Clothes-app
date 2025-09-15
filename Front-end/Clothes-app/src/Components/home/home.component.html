@@ -32,7 +32,7 @@
 
 <div class="brands-bar" id="brand">
   @for (i of brands; track i) {
-    <span class="brand-logo">{{i}}</span>
+    <span class="brand-logo"  routerLink="/category/brand/{{i}}">{{i}}</span>
   }
 </div>
 
@@ -124,7 +124,7 @@
   <div class="style-wrapper">
     <h2 class="section-title text-center">BROWSE BY CATEGORY</h2>
     <div class="grid-container">
-      <div class="style-card" *ngFor="let style of categories">
+      <div class="style-card" *ngFor="let style of categories" routerLink="/category/category/{{style.name}}">
         <img [src]="style.image" [alt]="style.name" class="style-img" />
         <h5 class="style-name">{{ style.name }}</h5>
       </div>

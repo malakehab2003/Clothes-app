@@ -9,6 +9,10 @@
   transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
+.option {
+  cursor: pointer;
+}
+
 /* Filter option buttons */
 .filter-btn {
   background: #f5f5f5;
