@@ -124,7 +124,7 @@
   <div class="style-wrapper">
     <h2 class="section-title text-center">BROWSE BY CATEGORY</h2>
     <div class="grid-container">
-      <div class="style-card" *ngFor="let style of dressStyles">
+      <div class="style-card" *ngFor="let style of categories">
         <img [src]="style.image" [alt]="style.name" class="style-img" />
         <h5 class="style-name">{{ style.name }}</h5>
       </div>

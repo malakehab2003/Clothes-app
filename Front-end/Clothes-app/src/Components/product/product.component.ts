@@ -2,8 +2,9 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Review } from '../models/IReview';
+import { GetDataService } from '../../Services/get-data.service';
+
 
 @Component({
   selector: 'app-product',
@@ -41,7 +42,7 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  constructor(private fb: FormBuilder, private activedrouter : ActivatedRoute, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private activedrouter : ActivatedRoute, private data: GetDataService) {
     this.reviewForm = this.fb.group({
       rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -56,52 +57,27 @@ export class ProductComponent implements OnInit {
   filteredReviews: Review[] = [];
 
   ngOnInit() {
-    // get id from params
-    this.ID = Number(this.activedrouter.snapshot.paramMap.get('id'));
+  // subscribe to param changes
+  this.activedrouter.paramMap.subscribe(params => {
+    this.ID = Number(params.get('id'));
 
-    // get product from api
     if (this.ID) {
-      const url = `https://dummyjson.com/products/${this.ID}`
-      this.http.get(url).subscribe({
-        next: (data) => {
-          this.product = data;
-          
-          // Assign colors for the current product
-          const savedColors = JSON.parse(localStorage.getItem('colors') || '{}');
-          this.product.colors = savedColors[this.product.id] || [];
+      // load products
+      this.data.getData();
 
-          // Assign colors for the current product
-          const savedSizes = JSON.parse(localStorage.getItem('sizes') || '{}');
-          this.product.sizes = savedSizes[this.product.id] || [];
-
-          this.reviews = this.product.reviews || [];
-          this.applyFilters();
-
-          this.getRelatedProducts(this.product.category, this.product.id);
-        },
-
-        error: (err) => {
-          console.error('Error fetching product', err);
-        }
-      })
+      // get product by id
+      this.product = this.data.products.find(p => p.id === this.ID);
+      this.applyFilters();
+      this.getRelatedProducts(this.product?.category, this.product?.id);
     }
+  });
+}
 
-
-    this.applyFilters();
-  }
 
 
   getRelatedProducts(category: string, excludeId: number) {
-    const url = `https://dummyjson.com/products/category/${category}`;
-    this.http.get(url).subscribe({
-      next: (data: any) => {
-        // exclude current product
-        this.recommendations = data.products.filter((p: any) => p.id !== excludeId).slice(0, 6);
-      },
-      error: (err) => {
-        console.error('Error fetching related products', err)
-      }
-    });
+    this.recommendations = this.data.products
+      .filter((p) => p.id !== excludeId && p.category === category);
   }
 
 

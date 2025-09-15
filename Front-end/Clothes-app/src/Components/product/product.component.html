@@ -234,7 +234,7 @@
   <div class="reco mb-5">
     <h3 class="h">YOU MIGHT ALSO LIKE</h3>
     <div class="reco-grid">
-      <div *ngFor="let item of recommendations" class="card">
+      <div *ngFor="let item of recommendations" class="card" routerLink='/product/{{item.id}}'>
         <img [src]="item.images[0]" alt="">
         <div class="card-body">
           <p class="title">{{ item.title }}</p>

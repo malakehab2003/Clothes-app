@@ -1,6 +1,6 @@
 import { Iproduct } from './../models/iproduct';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import { FormsModule } from '@angular/forms';
 
@@ -10,30 +10,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './category-page.component.html',
   styleUrls: ['./category-page.component.css']
 })
-export class CategoryPageComponent {
- categories = ['T-shirts', 'Shirts', 'Jeans', 'Hoodies'];
-  sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  colors = ['#000', '#fff', '#ff0000', '#00ff00', '#0000ff', '#ffa500', '#800080'];
-  styles = ['Casual', 'Formal', 'Party', 'Gym'];
+export class CategoryPageComponent implements OnInit {
+  categories: string[] = [];
+  sizes = ['XS', 'S', 'M', 'L', 'XL'];
+  colors = ['Red', 'Orange', 'Green', 'Blue', 'Black', 'Grey', 'Yellow'];
+  brands: string[] = [];
 
-  products: Iproduct[] = Array.from({ length: 100 }, (_, i) => {
-    const id = i + 1;
-    return {
-      id,
-      name: `Product ${id}`,
-      image: `/assets/product${(id % 10) + 1}.png`,
-      price: 50 + (id % 20) * 5,
-      oldPrice: 60 + (id % 20) * 5,
-      discount: (id % 5) * 5,
-      rating: 3 + (id % 3) * 0.5,
-      reviews: 20 + (id * 7) % 200,
-      category: this.categories[id % this.categories.length],
-      size: this.sizes[id % this.sizes.length],
-      color: this.colors[id % this.colors.length],
-      style: this.styles[id % this.styles.length],
-      quantity: 1,
-    };
-  });
+  products: any[] = [];
 
   currentPage = 1;
   pageSize = 9;
@@ -58,7 +41,7 @@ export class CategoryPageComponent {
   selectedCategory: string | null = null;
   selectedSize: string | null = null;
   selectedColor: string | null = null;
-  selectedStyle: string | null = null;
+  selectedbrand: string | null = null;
   maxPrice: number = 200;
 
   get filteredProducts() {
@@ -66,7 +49,7 @@ export class CategoryPageComponent {
       (!this.selectedCategory || p.category === this.selectedCategory) &&
       (!this.selectedSize || p.size === this.selectedSize) &&
       (!this.selectedColor || p.color === this.selectedColor) &&
-      (!this.selectedStyle || p.style === this.selectedStyle) &&
+      (!this.selectedbrand || p.brand === this.selectedbrand) &&
       p.price <= this.maxPrice
     );
   }
@@ -86,8 +69,8 @@ export class CategoryPageComponent {
     this.currentPage = 1;
   }
 
-  applyStyleFilter(style: string) {
-    this.selectedStyle = style;
+  applyBrandFilter(brand: string) {
+    this.selectedbrand = brand;
     this.currentPage = 1;
   }
 
@@ -95,7 +78,7 @@ export class CategoryPageComponent {
     this.selectedCategory = null;
     this.selectedSize = null;
     this.selectedColor = null;
-    this.selectedStyle = null;
+    this.selectedbrand = null;
     this.maxPrice = 200;
     this.currentPage = 1;
   }
@@ -110,6 +93,15 @@ export class CategoryPageComponent {
   showMobileFilters = false;
 
   ngOnInit() {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      // get categories from local storage
+      const cats: any = JSON.parse(localStorage.getItem("categories") || "[]");
+      this.categories = cats || [];
+
+      // get brands from local storage
+      const bs: any = JSON.parse(localStorage.getItem("brands") || "[]");
+      this.brands = bs || [];
+    }
     this.checkMobile();
   }
 

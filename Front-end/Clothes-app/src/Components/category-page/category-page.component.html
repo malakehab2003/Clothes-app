@@ -60,15 +60,15 @@
       </ul>
     }
 
-    <!-- Style -->
+    <!-- brand -->
     <h4 class="h6 fw-semibold d-flex justify-content-between align-items-center mb-2"
-        (click)="toggleFilter('style')">Style ▼</h4>
-    @if (openFilter === 'style') {
+        (click)="toggleFilter('brand')">Brand ▼</h4>
+    @if (openFilter === 'brand') {
       <ul class="list-unstyled mb-3">
-        @for (st of styles; track st) {
+        @for (st of brands; track st) {
           <li class="mb-2">
             <button type="button" class="filter-btn w-100 text-start"
-                    (click)="applyStyleFilter(st)">
+                    (click)="applyBrandFilter(st)">
               {{ st }}
             </button>
           </li>
