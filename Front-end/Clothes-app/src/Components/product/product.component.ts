@@ -153,14 +153,35 @@ export class ProductComponent implements OnInit {
 
   submitReview() {
     if (this.reviewForm.valid) {
-      const newReview = {
-        rating: this.reviewForm.value.rating,
-        comment: this.reviewForm.value.comment,
-        date: new Date().toISOString(),
-        reviewerName: this.reviewForm.value.name,
-        reviewerEmail: this.reviewForm.value.email || ""
-      };
-      
+    const newReview = {
+      rating: this.reviewForm.value.rating,
+      comment: this.reviewForm.value.comment,
+      date: new Date().toISOString(),
+      reviewerName: this.reviewForm.value.name,
+      reviewerEmail: this.reviewForm.value.email || ""
+    };  
+
+    if (typeof window !== 'undefined' && localStorage) {
+      let localProductsString = localStorage.getItem("products");
+      let localProducts: any[] = [];
+
+      if (localProductsString) {
+        try {
+          localProducts = JSON.parse(localProductsString);
+          let product = localProducts.find(p => p.id === this.ID);
+
+          if (product) {
+            product.reviews = product.reviews || [];
+            product.reviews.push(newReview);
+
+            localStorage.setItem("products", JSON.stringify(localProducts));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
       this.reviews.unshift(newReview);
       this.applyFilters();
       this.closeReviewForm();
