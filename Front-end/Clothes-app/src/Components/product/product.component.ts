@@ -70,6 +70,7 @@ export class ProductComponent implements OnInit {
 
       // get product by id
       this.product = this.data.products.find(p => p.id === this.ID);
+      this.reviews = this.product.reviews;
       this.applyFilters();
       this.getRelatedProducts(this.product?.category, this.product?.id);
     }
