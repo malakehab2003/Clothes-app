@@ -10,6 +10,7 @@ export class GetDataService {
   products: any[] = [];
   categories: any[] = [];
   brands: any[] = [];
+  promos: {} = {};
   constructor(private http: HttpClient) {}
 
   getRandomColors = (arr: string[], n: number): string[] => {
@@ -63,6 +64,8 @@ export class GetDataService {
           }
         });
 
+
+
         // get categories and brands unique
         this.categories = Array.from(new Set(this.products.map(p => p.category)));
         
@@ -74,6 +77,16 @@ export class GetDataService {
           )
         );
 
+
+        // add promocodes
+        this.promos = {
+          "take10": 10,
+          "summer20": 20,
+          "winter30": 30,
+          "first50": 50,
+        }
+
+
         if (typeof window !== 'undefined' && localStorage) {
           localStorage.setItem("products", JSON.stringify(this.products))
         }
@@ -82,6 +95,9 @@ export class GetDataService {
         }
         if (typeof window !== 'undefined' && localStorage) {
           localStorage.setItem("brands", JSON.stringify(this.brands))
+        }
+        if (typeof window !== 'undefined' && localStorage) {
+          localStorage.setItem("promos", JSON.stringify(this.promos))
         }
 
       },
@@ -98,12 +114,16 @@ export class GetDataService {
     let storedProducts;
     let storedCategories;
     let storedBrands;
+    let storendPromos;
     if (typeof window !== 'undefined' && localStorage) {
       storedProducts = localStorage.getItem('products');
       this.products = JSON.parse(storedProducts || '[]');
 
       storedCategories = localStorage.getItem('categories');
       this.categories = JSON.parse(storedCategories || '[]');
+
+      storendPromos = localStorage.getItem('promos');
+      this.promos = JSON.parse(storendPromos || '[]');
       
       storedBrands = localStorage.getItem('brands');
       this.brands = JSON.parse(storedBrands || '[]');

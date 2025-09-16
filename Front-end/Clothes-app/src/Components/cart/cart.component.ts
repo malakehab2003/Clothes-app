@@ -1,16 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { Iproduct } from '../models/iproduct';
 import { CurrencyPipe } from '@angular/common';
+import { GetDataService } from '../../Services/get-data.service';
+import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-cart',
-  imports: [CurrencyPipe],
+  standalone: true,
+  imports: [CurrencyPipe, NgIf],
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
   products: any[] = [];
+  promos: Record<string, number> = {};
+  validPromo: boolean = false;
+  promo: number = 0;
+  constructor(private data: GetDataService) {};
   ngOnInit(): void {
+    this.data.getData();
+    this.promos = this.data.promos;
     if (typeof window !== 'undefined' && window.localStorage) {
       this.products = JSON.parse(localStorage.getItem('cart') || '[]');
     } else {
@@ -35,16 +45,36 @@ export class CartComponent implements OnInit {
     localStorage.setItem('cart', JSON.stringify(this.products));
   }
   get subtotal(): number {
-  return this.products.reduce((acc: any, p: any) => acc + p.price * p.quantity, 0);
+    return this.products.reduce((acc: any, p: any) => acc + p.price * p.quantity, 0);
   }
+
+  validatePromo(promo: string) {
+    if (promo && promo.length > 0 && Object.keys(this.promos).includes(promo)) {
+      this.validPromo = true;
+      this.promo = this.promos[promo];
+    } else {
+      alert("this promo code is not valid");
+      this.promo = 0;
+      this.validPromo = false;
+
+    }
+  }
+
+  get applypromo(): number{
+    if (this.validPromo) {
+      return this.subtotal * this.promo / 100;
+    }
+    return 0
+  }
+
   get discount(): number {
-  return this.subtotal * 0.2;
+    return this.subtotal * 0.2;
   }
   get deliveryFee(): number {
     return 15;
   }
 
   get total(): number {
-    return this.subtotal - this.discount + this.deliveryFee;
+    return this.subtotal - this.discount - this.applypromo + this.deliveryFee;
   }
 }

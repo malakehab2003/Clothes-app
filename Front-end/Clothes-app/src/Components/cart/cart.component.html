@@ -34,22 +34,30 @@
             <p>Subtotal:</p>
             <p class="fw-bold">{{ subtotal | currency:'USD':'symbol' }}</p>
         </div>
+
         <div class="discount d-flex justify-content-between mb-2">
             <p>Discount(20%):</p>
             <p class="fw-bold text-danger">-{{discount|currency:'USD':'symbol'}}</p>
         </div>
+
         <div class="fee d-flex justify-content-between mb-2">
             <p>Delivery Fee:</p>
             <p class="fw-bold">{{deliveryFee|currency:'USD':'symbol'}}</p>
         </div>
+
+        <div class="discount d-flex justify-content-between mb-2" *ngIf="validPromo">
+            <p>{{promoValue.value}} ({{promo}}%):</p>
+            <p class="fw-bold text-danger">-{{applypromo|currency:'USD':'symbol'}}</p>
+        </div>
+
         <hr>
         <div class="full d-flex justify-content-between mb-2">
             <p>Total :</p>
             <p class="fw-bold">{{total|currency:'USD':'symbol'}} </p>
         </div>
         <div class="code d-flex justify-content-evenly mb-4">
-            <input type="text" placeholder="Add promo code" class="rounded-4 w-75 border-0 ps-3">
-            <button class="btn btn-dark bg-black rounded-4 w-25">Apply</button>
+            <input type="text" placeholder="Add promo code" class="rounded-4 w-75 border-0 ps-3" #promoValue>
+            <button class="btn btn-dark bg-black rounded-4 w-25" (click)="validatePromo(promoValue.value)">Apply</button>
         </div>
         <button class="btn btn-dark bg-black rounded-4 w-100 d-block mt-2 ">Go to Checkout <i class="fa-solid fa-arrow-right"></i></button>
     </div>
