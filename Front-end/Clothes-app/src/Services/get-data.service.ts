@@ -49,10 +49,18 @@ export class GetDataService {
 
 
         // add sizes to products
-        const size = ['XS', 'S', 'M', 'L', 'XL'];
+        const clothesSize = ['XS', 'S', 'M', 'L', 'XL'];
+        const menShoeSize = ['40', '41', '42', '43', '44'];
+        const womenShoeSize = ['37', '38', '39', '40', '41'];
 
         this.products.map((p) => {
-          p.sizes = this.getRandomSize(size, 3);
+          if (p.category === "mens-shirts" || p.category === 'womens-dresses') {
+            p.sizes = this.getRandomSize(clothesSize, 3);
+          } else if (p.category === "mens-shoes") {
+            p.sizes = this.getRandomSize(menShoeSize, 3);
+          } else if (p.category === "womens-shoes") {
+            p.sizes = this.getRandomSize(womenShoeSize, 3);
+          }
         });
 
         // get categories and brands unique
@@ -92,11 +100,13 @@ export class GetDataService {
     let storedBrands;
     if (typeof window !== 'undefined' && localStorage) {
       storedProducts = localStorage.getItem('products');
-      this.products = JSON.parse(storedProducts || '[]')
+      this.products = JSON.parse(storedProducts || '[]');
+
       storedCategories = localStorage.getItem('categories');
-      this.categories = JSON.parse(storedCategories || '[]')
+      this.categories = JSON.parse(storedCategories || '[]');
+      
       storedBrands = localStorage.getItem('brands');
-      this.brands = JSON.parse(storedBrands || '[]')
+      this.brands = JSON.parse(storedBrands || '[]');
     }
 
     if (!this.products || this.products.length < 1) {

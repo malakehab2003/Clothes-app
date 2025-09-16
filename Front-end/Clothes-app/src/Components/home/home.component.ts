@@ -25,9 +25,9 @@ export class HomeComponent implements OnInit {
     this.brands = this.data.brands
     this.categories = [
       { name: this.data.categories[0], image: 'assets/images/10.png' },
-      { name: this.data.categories[1], image: 'assets/images/11.png' },
+      { name: this.data.categories[1], image: 'assets/images/mens-shoes.jpg' },
       { name: this.data.categories[2], image: 'assets/images/12.png' },
-      { name: this.data.categories[3], image: 'assets/images/13.png' }
+      { name: this.data.categories[3], image: 'assets/images/womens-shoes.jpg' }
     ];
     // get new arrivals
     this.newArrivals = [...this.products].sort(

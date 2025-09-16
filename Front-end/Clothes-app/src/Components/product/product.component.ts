@@ -60,6 +60,9 @@ export class ProductComponent implements OnInit {
   // subscribe to param changes
   this.activedrouter.paramMap.subscribe(params => {
     this.ID = Number(params.get('id'));
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
 
     if (this.ID) {
       // load products
@@ -209,6 +212,7 @@ export class ProductComponent implements OnInit {
   );
   
   const productToSave = {
+    id: this.product.id,
     title: this.product.title,
     image: this.product.images[0],
     price: this.product.price,
