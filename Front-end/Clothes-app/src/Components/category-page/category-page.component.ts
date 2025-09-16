@@ -81,8 +81,8 @@ export class CategoryPageComponent implements OnInit {
       (!this.search || 
         p.title.toLowerCase().includes(this.search.toLowerCase()) ||
         p.description.toLowerCase().includes(this.search.toLowerCase()) ||
-        p.brand.toLowerCase().includes(this.search.toLowerCase()) ||
-        p.category.toLowerCase().includes(this.search.toLowerCase())
+        (p.brand || "").toLowerCase().includes(this.search.toLowerCase()) ||
+        (p.category || "").toLowerCase().includes(this.search.toLowerCase())
       )&&
       p.price <= this.maxPrice
     );
