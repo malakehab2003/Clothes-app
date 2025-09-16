@@ -3,6 +3,7 @@ import { Iproduct } from '../models/iproduct';
 import { CurrencyPipe } from '@angular/common';
 import { GetDataService } from '../../Services/get-data.service';
 import { NgIf } from '@angular/common';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,7 @@ export class CartComponent implements OnInit {
   promos: Record<string, number> = {};
   validPromo: boolean = false;
   promo: number = 0;
-  constructor(private data: GetDataService) {};
+  constructor(private data: GetDataService, private router: Router) {};
   ngOnInit(): void {
     this.data.getData();
     this.promos = this.data.promos;
@@ -102,6 +103,7 @@ export class CartComponent implements OnInit {
       this.products = [];
       localStorage.removeItem('cart');
       alert("Purchased successfully");
+      this.router.navigate(['/home']);
     }
   }
 }
