@@ -46,6 +46,7 @@ export class ProductComponent implements OnInit {
     this.reviewForm = this.fb.group({
       rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
       name: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
       comment: ['', [Validators.required, Validators.minLength(10)]]
     });
   }
@@ -70,7 +71,7 @@ export class ProductComponent implements OnInit {
 
       // get product by id
       this.product = this.data.products.find(p => p.id === this.ID);
-      this.reviews = this.product.reviews;
+      this.reviews = this.product?.reviews;
       this.applyFilters();
       this.getRelatedProducts(this.product?.category, this.product?.id);
     }
@@ -156,10 +157,10 @@ export class ProductComponent implements OnInit {
         rating: this.reviewForm.value.rating,
         comment: this.reviewForm.value.comment,
         date: new Date().toISOString(),
-        reviewerName: this.reviewForm.value.reviewerName,
-        reviewerEmail: this.reviewForm.value.reviewerEmail,
+        reviewerName: this.reviewForm.value.name,
+        reviewerEmail: this.reviewForm.value.email || ""
       };
-
+      
       this.reviews.unshift(newReview);
       this.applyFilters();
       this.closeReviewForm();

@@ -155,6 +155,14 @@
                   Please enter your name (minimum 2 characters)
                 </div>
               </div>
+
+              <div class="form-group">
+                <label for="reviewerEmail">Your Email (optional)</label>
+                <input type="email" id="reviewerEmail" formControlName="email" placeholder="Enter your email">
+                <div *ngIf="reviewForm.get('email')?.invalid && reviewForm.get('email')?.touched" class="error">
+                  Please enter a valid email
+                </div>
+              </div>
               
               <div class="form-group">
                 <label for="reviewComment">Your Review</label>
