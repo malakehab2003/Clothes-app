@@ -77,4 +77,31 @@ export class CartComponent implements OnInit {
   get total(): number {
     return this.subtotal - this.discount - this.applypromo + this.deliveryFee;
   }
+
+  Checkout () {
+    if (!this.products || this.products.length <= 0) {
+      alert("Can't check out");
+      return;
+    }
+
+    if (typeof window !== 'undefined' && localStorage) {
+      const totalPrice = this.total.toFixed(2)
+
+      const checkoutData = {
+        products: this.products,
+        purchaseData: {
+          totalPrice: totalPrice,
+          createdAt: new Date().toISOString()
+        }
+      };
+
+      const existingOrders = JSON.parse(localStorage.getItem('checkout') || '[]');
+      existingOrders.push(checkoutData);
+      localStorage.setItem('checkout', JSON.stringify(existingOrders));
+
+      this.products = [];
+      localStorage.removeItem('cart');
+      alert("Purchased successfully");
+    }
+  }
 }
